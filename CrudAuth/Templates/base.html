@@ -1,0 +1,140 @@
+{% load static %} {% load socialaccount %}
+<!DOCTYPE html>
+<html lang="en">
+  {% block head%}
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+      crossorigin="anonymous"
+    />
+
+    <title >Hello Django</title>
+  </head>
+  <body style="background-image:url('{% static "bg.png" %}')">
+  {% endblock head %} {% block header %}
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'index' %}">Crud App</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a
+              class="nav-link active"
+              aria-current="page"
+              href="{% url 'index' %}"
+              >Home</a
+            >
+          </li>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              id="navbarDropdown"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Profile
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li>
+                <a class="dropdown-item" href="#">hello {{ user.username }}</a>
+              </li>
+              <li><a class="dropdown-item" href="{%  url 'account_change_password' %}">Change Password</a></li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  data-bs-toggle="modal"
+                  data-bs-target="#LogoutModel"
+                  action="{% url 'account_logout' %}"
+                  >Logout</a
+                >
+              </li>
+            </ul>
+          </li>
+
+          {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'account_login' %}">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{%  url 'account_signup'  %}">Singup</a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+  {% endblock header %} 
+  {% block body %}
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+    crossorigin="anonymous"
+  ></script>
+ 
+  {% endblock body %}
+   {% block footer %}
+  <!-- <div class="footer">
+    <div class="container">
+      <div class="footer-text">
+        <p>DESIGN BY <a href="#"> Gajanan</a></p>
+      </div>
+    </div>
+  </div> -->
+  {% endblock footer %}
+
+  <!-- model  -->
+  <div
+    class="modal fade"
+    id="LogoutModel"
+    tabindex="-1"
+    aria-labelledby="LogoutModelLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          {% load i18n %}
+          <h1>{% trans "Sign Out" %}</h1>
+
+          <p>{% trans 'Are you sure you want to sign out?' %}</p>
+
+          <form method="post" action="{% url 'account_logout' %}">
+            {% csrf_token %} {% if redirect_field_value %}
+            <input
+              type="hidden"
+              name="{{ redirect_field_name }}"
+              value="{{ redirect_field_value }}"
+            />
+            {% endif %}
+            <button class="btn btn-primary" type="submit">
+              {% trans 'Sign Out' %}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Model End -->
+  </body>
+</html>
